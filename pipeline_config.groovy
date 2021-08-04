@@ -5,7 +5,7 @@
 */
 libraries{
 
-    @override generic_build {
+    generic_build {
         tests = ["unit_test.sh catapult-sdk", "unit_test.sh rest", "unit_test.sh spammer"]
     }
     publish_artifacts {
