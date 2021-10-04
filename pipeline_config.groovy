@@ -4,9 +4,8 @@
   library sources configured.
 */
 libraries{
-
-    @override generic_build {
-	scriptPath = "scripts/ci"
+    metal_build{}
+    @override build_setup {
         testScriptName = ["unit_test.sh catapult-sdk", "unit_test.sh rest", "unit_test.sh spammer"]
     }
     publish_artifacts {
