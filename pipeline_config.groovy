@@ -1,3 +1,7 @@
+jte {
+    pipeline_template = "Jenkinsfile.test"
+}
+
 /*
   define libraries to load.
   available libraries are based upon the
