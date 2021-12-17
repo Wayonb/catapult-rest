@@ -9,7 +9,7 @@ jte {
 */
 libraries{
     docker_build {
-	environment = 'nodejs1'
+	environment = 'nodejs'
     }
     @override build_setup {
         testScriptName = ["unit_test.sh catapult-sdk", "unit_test.sh rest", "unit_test.sh spammer"]
