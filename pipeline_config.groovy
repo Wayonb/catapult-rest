@@ -8,7 +8,9 @@ jte {
   library sources configured.
 */
 libraries{
-    metal_build{}
+    docker_build{
+	environment = 'nodejs'
+    }
     @override build_setup {
         testScriptName = ["unit_test.sh catapult-sdk", "unit_test.sh rest", "unit_test.sh spammer"]
     }
