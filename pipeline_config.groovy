@@ -13,6 +13,8 @@ libraries{
     }
     @override build_setup {
         testScriptName = ["unit_test.sh catapult-sdk", "unit_test.sh rest", "unit_test.sh spammer"]
+        registry = "https://registry.hub.docker.com" 
+        credential_id = "docker-hub-token-symbolserverbot"
     }
     publish_artifacts {
         docker {
