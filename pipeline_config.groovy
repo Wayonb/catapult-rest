@@ -1,5 +1,5 @@
 jte {
-   @override pipeline_template = "Jenkinsfile.test"
+   @override pipeline_template = "Jenkinsfile_mental"
 }
 
 /*
