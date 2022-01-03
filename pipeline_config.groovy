@@ -12,7 +12,9 @@ libraries{
 	environment = 'nodejs'
     }
     @override build_setup {
-        testScriptName = ["unit_test.sh catapult-sdk", "unit_test.sh rest", "unit_test.sh spammer"]
+        test_script_name = ["unit_test.sh catapult-sdk", "unit_test.sh rest", "unit_test.sh spammer"]
+        build_setup = "setup_build.sh"
+        setup_tests = "setup_tests.sh"
     }
     publish_artifacts {
         docker {
