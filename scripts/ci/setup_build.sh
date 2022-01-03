@@ -1,3 +1,3 @@
 #!/bin/bash
 
-sudo apt install -y net-tools
+apt install -y net-tools
