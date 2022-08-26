@@ -27,11 +27,23 @@ pipeline {
 	}
 
 	stages {
+		stage('checkout') {
+			when {
+				expression { helper.isManualBuild(env.MANUAL_GIT_BRANCH) }
+			}
+			steps {
+				script {
+					gitCheckout(helper.resolveBranchName(env.MANUAL_GIT_BRANCH), 'github_wayonb', env.GIT_URL)
+				}
+			}
+		}
 		stage('display environment') {
 			steps {
 				sh 'printenv'
+				sh 'ls -la'
 			}
 		}
+
 		stage('trigger build jobs') {
 			when {
 				expression {
