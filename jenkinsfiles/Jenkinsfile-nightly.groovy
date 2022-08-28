@@ -2,13 +2,13 @@ import hudson.model.*
 
 pipeline {
 	parameters {
-		gitParameter branchFilter: 'origin_source/(.*)',
+		gitParameter branchFilter: 'target/(.*)',
 			defaultValue: 'dev',
 			name: 'MANUAL_GIT_BRANCH',
 			type: 'PT_BRANCH',
 			selectedValue: 'TOP',
 			sortMode: 'ASCENDING',
-			useRepository: "${helper.resolveRepoName()}"
+			useRepository: "${env.REPO_GIT_URL.tokenize('/').last()}"
 		booleanParam name: 'SHOULD_PUBLISH_FAIL_JOB_STATUS', description: 'true to publish job status if failed', defaultValue: true
 		booleanParam name: 'WAIT_FOR_BUILDS', description: 'true to wait for trigger build to complete', defaultValue: true
 	}
