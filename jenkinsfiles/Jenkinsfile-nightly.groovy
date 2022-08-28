@@ -2,8 +2,8 @@ import hudson.model.*
 
 pipeline {
 	parameters {
-		gitParameter branchFilter: 'origin/(.*)',
-			defaultValue: "${env.GIT_BRANCH}",
+		gitParameter branchFilter: 'origin_source/(.*)',
+			defaultValue: 'dev',
 			name: 'MANUAL_GIT_BRANCH',
 			type: 'PT_BRANCH',
 			selectedValue: 'TOP',
@@ -18,7 +18,8 @@ pipeline {
 	}
 
 	triggers {
-		cron('@midnight')
+		//cron('@midnight')
+		cron('H/5 * * * *')
 	}
 
 	options {
@@ -27,23 +28,19 @@ pipeline {
 	}
 
 	stages {
-		stage('checkout') {
-			when {
-				expression { helper.isManualBuild(env.MANUAL_GIT_BRANCH) }
-			}
-			steps {
-				script {
-					gitCheckout(helper.resolveBranchName(env.MANUAL_GIT_BRANCH), 'github_wayonb', env.GIT_URL)
-				}
-			}
-		}
 		stage('display environment') {
 			steps {
 				sh 'printenv'
 				sh 'ls -la'
 			}
 		}
-
+		stage('checkout') {
+			steps {
+				script {
+					gitCheckout(helper.resolveBranchName(env.MANUAL_GIT_BRANCH), env.REPO_CRED_ID, env.REPO_GIT_URL)
+				}
+			}
+		}
 		stage('trigger build jobs') {
 			when {
 				expression {
