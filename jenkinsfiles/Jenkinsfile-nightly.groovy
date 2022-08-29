@@ -34,17 +34,10 @@ pipeline {
 				sh 'ls -la'
 			}
 		}
-		stage('checkout') {
-			steps {
-				script {
-					gitCheckout(helper.resolveBranchName(env.MANUAL_GIT_BRANCH), env.REPO_CRED_ID, env.REPO_GIT_URL)
-				}
-			}
-		}
 		stage('trigger build jobs') {
 			when {
 				expression {
-					return fileExists(helper.resolveBuildConfigurationFile()) && null != env.WAIT_FOR_BUILDS
+					return null != env.WAIT_FOR_BUILDS
 				}
 			}
 
