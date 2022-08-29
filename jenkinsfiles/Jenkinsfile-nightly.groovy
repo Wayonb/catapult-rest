@@ -92,7 +92,7 @@ Map<String, String> siblingJobNames() {
 	Item project = Jenkins.get().getItemByFullName(currentBuild.fullProjectName)
 	List<Items> siblingItems = project.parent.getItems()
 
-	Map<String, String> targets
+	Map<String, String> targets = [:]
 	for (item in siblingItems) {
 		echo "found item - ${item}"
 		if (!item instanceof AbstractModelObject || item.fullName == project.fullName) {
