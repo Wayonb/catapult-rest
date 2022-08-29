@@ -2,7 +2,7 @@ import hudson.model.*
 
 pipeline {
 	parameters {
-		gitParameter branchFilter: 'target/(.*)',
+		gitParameter branchFilter: '*',
 			defaultValue: 'dev',
 			name: 'MANUAL_GIT_BRANCH',
 			type: 'PT_BRANCH',
