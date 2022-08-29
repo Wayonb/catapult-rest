@@ -64,7 +64,7 @@ void triggerAllJobs(String branchName, boolean waitForDownStream) {
 
 				// Platform parameter can vary per project, get the last value
 				String platform = lastJobParameterValue(fullJobName, platformName)
-
+				ehco "param - ${shouldPublishFailJobStatusName}"
 				build job: "${fullJobName}", parameters: [
 					gitParameter(name: 'MANUAL_GIT_BRANCH', value: branchName),
 					string(name: platformName, value: platform ?: 'ubuntu'),
