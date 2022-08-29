@@ -2,7 +2,7 @@ import hudson.model.*
 
 pipeline {
 	parameters {
-		gitParameter branchFilter: '*',
+		gitParameter branchFilter: 'origin/(.*)',
 			defaultValue: 'dev',
 			name: 'MANUAL_GIT_BRANCH',
 			type: 'PT_BRANCH',
@@ -50,7 +50,7 @@ pipeline {
 
 			steps {
 				script {
-					triggerAllJobs(env.JOB_NAME, env.JOB_BASE_NAME, helper.resolveBranchName(env.MANUAL_GIT_BRANCH), env.WAIT_FOR_BUILDS.toBoolean())
+					triggerAllJobs(helper.resolveBranchName(env.MANUAL_GIT_BRANCH), env.WAIT_FOR_BUILDS.toBoolean())
 				}
 			}
 		}
@@ -71,23 +71,23 @@ pipeline {
 	}
 }
 
-void triggerAllJobs(String jobName, String jobBaseName, String branchName, boolean waitForDownStream) {
-	final String pathSeparator = '/'
-	String filepath = helper.resolveBuildConfigurationFile()
+void triggerAllJobs(String branchName, boolean waitForDownStream) {
+	// final String pathSeparator = '/'
+	// String filepath = helper.resolveBuildConfigurationFile()
 
-	Map<String, String>  jobInfos = [:]
-	yamlHelper.readYamlFromFile(filepath).builds.each { 
-		jobInfos.put(it.path.tokenize(pathSeparator).last(), it.name)
-	}
+	// Map<String, String>  jobInfos = [:]
+	// yamlHelper.readYamlFromFile(filepath).builds.each { 
+	// 	jobInfos.put(it.path.tokenize(pathSeparator).last(), it.name)
+	// }
 
-	String currentJobfolder = jobName - jobBaseName
+	Map<String, String> siblingNameMap = siblingJobNames()
+
 	Map<String, Closure> buildJobs = [:]
-	jobInfos.each { jobInfo ->
-		String displayName = jobInfo.value
+	siblingNameMap.each { siblingName ->
+		String displayName = siblingName.value
 		buildJobs["${displayName}"] = {
 			stage("${displayName}") {
-				String pipelineName = jobInfo.key
-				String fullJobName = currentJobfolder + pipelineName + pathSeparator + branchName
+				String fullJobName = siblingName.key + '/' + branchName
 
 				// Platform parameter can vary per project, get the last value
 				String platform = getLastJobParameter(fullJobName, 'PLATFORM')
@@ -105,6 +105,21 @@ void triggerAllJobs(String jobName, String jobBaseName, String branchName, boole
 	}
 
 	parallel buildJobs
+}
+
+Map<String, String> siblingJobNames() {
+	Item project = Jenkins.get().getItemByFullName(currentBuild.fullProjectName)
+	List<Items> siblingItems = project.parent.getItems()
+
+	List<String> targets
+	for (item in siblingItems) {
+		if (!item instanceof WorkflowMultiBranchProject) {
+			continue
+		}
+		targets.put(item.fullName, item.displayName)
+	}
+
+	return targets
 }
 
 Object getLastJobParameter(String fullJobName, String parameterName) {
