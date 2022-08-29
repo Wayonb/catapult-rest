@@ -98,6 +98,6 @@ Map<String, String> siblingJobNames() {
 
 Object lastJobParameterValue(String fullJobName, String parameterName) {
 	Item job = Jenkins.get().getItemByFullName(fullJobName)
-	ParametersAction params = job.lastBuild.getAction(hudson.model.ParametersAction)
-	return params.getParameter(parameterName).value()
+	ParametersAction params = job.getLastBuild().getAction(hudson.model.ParametersAction)
+	return params.getParameter(parameterName).getValue()
 }
