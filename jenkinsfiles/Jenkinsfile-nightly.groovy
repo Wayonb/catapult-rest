@@ -2,13 +2,7 @@ import hudson.model.*
 
 pipeline {
 	parameters {
-		gitParameter branchFilter: 'origin/(.*)',
-			defaultValue: 'dev',
-			name: 'MANUAL_GIT_BRANCH',
-			type: 'PT_BRANCH',
-			selectedValue: 'TOP',
-			sortMode: 'ASCENDING',
-			useRepository: "${env.REPO_GIT_URL.tokenize('/').last()}"
+		string name: 'JOB_BRANCH', description: 'branch to trigger jobs', defaultValue: 'dev'
 		booleanParam name: 'SHOULD_PUBLISH_FAIL_JOB_STATUS', description: 'true to publish job status if failed', defaultValue: true
 		booleanParam name: 'WAIT_FOR_BUILDS', description: 'true to wait for trigger build to complete', defaultValue: true
 	}
@@ -34,13 +28,6 @@ pipeline {
 				sh 'ls -la'
 			}
 		}
-		stage('checkout') {
-			steps {
-				script {
-					gitCheckout(helper.resolveBranchName(env.MANUAL_GIT_BRANCH), env.REPO_CRED_ID, env.REPO_GIT_URL)
-				}
-			}
-		}
 		stage('trigger build jobs') {
 			when {
 				expression {
@@ -50,7 +37,7 @@ pipeline {
 
 			steps {
 				script {
-					triggerAllJobs(helper.resolveBranchName(env.MANUAL_GIT_BRANCH), env.WAIT_FOR_BUILDS.toBoolean())
+					triggerAllJobs(env.JOB_BRANCH, env.WAIT_FOR_BUILDS.toBoolean())
 				}
 			}
 		}
