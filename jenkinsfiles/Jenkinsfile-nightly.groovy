@@ -86,7 +86,7 @@ Map<String, String> siblingJobNames() {
 
 	Map<String, String> targets = [:]
 	for (item in siblingItems) {
-		if (item !instanceof AbstractModelObject || item.fullName == project.fullName) {
+		if (!(item instanceof AbstractModelObject) || item.fullName == project.fullName) {
 			continue
 		}
 
