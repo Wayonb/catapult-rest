@@ -29,15 +29,9 @@ pipeline {
 			}
 		}
 		stage('trigger build jobs') {
-			when {
-				expression {
-					return fileExists(helper.resolveBuildConfigurationFile()) && null != env.WAIT_FOR_BUILDS
-				}
-			}
-
 			steps {
 				script {
-					triggerAllJobs(env.JOB_BRANCH, env.WAIT_FOR_BUILDS.toBoolean())
+					triggerAllJobs(env.JOB_BRANCH, env.WAIT_FOR_BUILDS ? env.WAIT_FOR_BUILDS.toBoolean() : true)
 				}
 			}
 		}
