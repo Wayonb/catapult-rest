@@ -1,0 +1,17 @@
+version: 2
+updates:
+
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: daily
+    target-branch: dev
+    groups:
+      all_dependencies:
+        update-types:
+          - 'minor'
+          - 'patch'
+    labels: [dependency]
+    versioning-strategy: increase
+    commit-message:
+      prefix: '[dependency]'
